@@ -1,0 +1,9 @@
+{
+  "name": "websocket-session-template",
+  "version": "1.0.0",
+  "author": "J Riley Harrington",
+  "description": "Web Socket Session Template",
+  "dependencies": {
+    "socket.io": "^1.7.2"
+  }
+}

@@ -1,0 +1,38 @@
+<html>
+    
+    <head>
+        <script src="/socket.io/socket.io.js"></script>
+        <title>Host</title>
+        <script>
+            var socket;
+            function init() {
+                socket = io.connect();
+            };
+
+            function hostConnect() {
+                var data = "poo";
+                socket.emit('hostConnect', data);
+            };
+
+            function clientConnect() {
+                var data = {sessionID: document.getElementById('SessionID').value};
+                socket.emit('clientConnect', data);
+            };
+
+        </script>
+    </head>
+
+    <body onload="init()">
+        <h1>Landing Page</h1>
+        <p>Server Message: <em id="SrvMsg">Waiting for connection</em></p>
+        <p>Connecting as...</p>
+
+        <div>
+            <button type="button" onclick="hostConnect()">Host</button>
+            <br>
+            <input id="SessionID"type="text" maxlength="4"/>
+            <button type="button" onclick="clientConnect()">Client</button>
+        </div>
+    </body>
+
+</html>
