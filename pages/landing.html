@@ -2,16 +2,25 @@
     
     <head>
         <script src="/socket.io/socket.io.js"></script>
-        <title>Host</title>
+        <title>Landing</title>
         <script>
             var socket;
             function init() {
                 socket = io.connect();
+                socket.on('redirectHost', function(data) {
+                    console.log(data);
+                    window.location = window.location+"host";
+                });
+                socket.on('redirectClient', function(data) {
+                    console.log(data);
+                    window.location = window.location+"client";
+                });
             };
 
             function hostConnect() {
-                var data = "poo";
+                var data = null;
                 socket.emit('hostConnect', data);
+                
             };
 
             function clientConnect() {

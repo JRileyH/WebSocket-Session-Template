@@ -1,8 +1,38 @@
 var http = require('http');
+var fs = require('fs');
+var url = require('url');
 var socket = require('socket.io')();
-var handler = require('./handlers')
 
-var app = http.createServer(handler.landing);
+var landingHandler = function(req, res){
+    var path = url.parse(req.url).pathname;
+    var cb = function(err, data){
+        if(err){
+            res.writeHead(500);
+            console.error(err);
+            return res.end("ERROR: Failed to load landing page");
+        }else{
+            res.writeHead(200);
+            res.end(data);
+        }
+    }
+
+    switch(path) {
+        case '/host':
+            fs.readFile(__dirname + '/pages/host.html', cb);
+            break;
+
+        case '/client':
+            fs.readFile(__dirname + '/pages/host.html', cb);
+            break;
+        
+        case '/':
+        default:
+            fs.readFile(__dirname + '/pages/landing.html', cb);
+            break;
+    }
+};
+
+var app = http.createServer(landingHandler);
 var io = socket.listen(app);
 
 var connector = "";
@@ -11,6 +41,21 @@ var sessions = [];
 io.sockets.on('connection', function(socket){
     connector = socket.handshake.address;
     console.log(connector + " landed");
+
+    for(var i in sessions){
+        if(sessions[i].host===connector){
+            var packet = {index:i};
+            socket.emit('redirectHost', packet);
+            break;
+        }
+        for(var j in sessions[i].clients){
+            if(sessions[i].clients===connector){
+                var packet = {index:i};
+                socket.emit('redirectClient', packet);
+                break;
+            }
+        }
+    }
 
     socket.on('hostConnect', function(data){
         var sessionIndex = null;
@@ -33,9 +78,12 @@ io.sockets.on('connection', function(socket){
                 id:sessionID,
                 clients:[]
             });
+            var packet = {index:sessionIndex};
+            socket.emit('redirectHost', packet);
         }else{
             console.log("Host "+connector+" already connected for Session "+session[sessionIndex].id);
         }
+        console.log(sessions);
     });
 
     socket.on('clientConnect', function(data){
@@ -57,9 +105,12 @@ io.sockets.on('connection', function(socket){
         }
         if(joinSession){
             sessions[sessionIndex].clients.push(connector);
+            var packet = {index:sessionIndex};
+            socket.emit('redirectClient', packet);
         }else{
             console.log("No Session "+data.sessionID+" found or "+connector+" already connected as client");
         }
+        console.log(sessions);
     });
 });
 
