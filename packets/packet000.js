@@ -5,27 +5,13 @@ module.exports = function(){
     var _p = {};
     var _me;
     var socket;
-    _p.construct = function(socket) {
+    _p.serve = function(socket) {
         _me = socket.handshake.address;
         console.log(_me + " has landed");
-
-        for(var i in global.sessions) {
-            if(global.sessions[i].host===connector) {
-                //redirect to host
-                break;
-            }
-            for(var j in global.sessions[i].clients) {
-                if(global.sessions[i].clients===connector) {
-                    //redirect to client
-                    break;
-                }
-            }
-        }
-
-        socket.on('hostConnect', require('./packet001')(_me).construct);
-        socket.on('clientConnect', require('./packet002')(_me).construct);
+        socket.on('hostConnect', require('./packet001')(_me).serve);
+        socket.on('clientConnect', require('./packet002')(_me).serve);
     }
-    _p.emit = function(){
+    _p.respond = function(){
 
     }
     return _p;

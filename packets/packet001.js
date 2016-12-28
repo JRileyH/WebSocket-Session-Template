@@ -3,7 +3,7 @@
 
 module.exports = function(me){
     var _p = {};
-    _p.construct = function(data){
+    _p.serve = function(data){
         var sessionIndex = null;
         var sessionID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4);
         var createSession = true;
@@ -25,13 +25,12 @@ module.exports = function(me){
                 clients:[]
             });
             var packet = {index:sessionIndex};
-            //redirect to host page
         }else{
             console.log("Host "+me+" already connected for Session "+global.session[sessionIndex].id);
         }
         console.log(global.sessions);
     }
-    _p.emit = function(){
+    _p.respond = function(){
 
     }
     return _p;

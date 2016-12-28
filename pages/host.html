@@ -3,10 +3,14 @@
         <script src="/socket.io/socket.io.js"></script>
         <title>Host</title>
         <script>
-        
+            var socket;
+            function init() {
+                socket = io.connect();
+            };
         </script>
     </head>
-    <body>
+    <body onload="init()">
         <h1>Host Page</h1>
+        <h3>Session ID: <span id="sid">????</span></h3>
     </body>
 </html>

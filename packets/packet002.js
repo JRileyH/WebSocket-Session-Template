@@ -3,7 +3,7 @@
 
 module.exports = function(me) {
     var _p = {};
-    _p.construct = function(data) {
+    _p.serve = function(data) {
         var sessionIndex = null;
         var joinSession = false;
         for(var i in sessions){
@@ -23,13 +23,12 @@ module.exports = function(me) {
         if(joinSession){
             sessions[sessionIndex].clients.push(me);
             var packet = {index:sessionIndex};
-            //redirect to client page
         }else{
             console.log("No Session "+data.sessionID+" found or "+me+" already connected as client");
         }
         console.log(sessions);
     }
-    _p.emit = function(){
+    _p.respond = function(){
 
     }
     return _p;

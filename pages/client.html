@@ -3,10 +3,13 @@
         <script src="/socket.io/socket.io.js"></script>
         <title>Client</title>
         <script>
-
+            var socket;
+            function init() {
+                socket = io.connect();
+            };
         </script>
     </head>
-    <body>
+    <body onload="init()">
         <h1>Client Page</h1>
     </body>
 </html>

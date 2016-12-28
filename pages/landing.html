@@ -7,25 +7,18 @@
             var socket;
             function init() {
                 socket = io.connect();
-                socket.on('redirectHost', function(data) {
-                    console.log(data);
-                    window.location = window.location+"host";
-                });
-                socket.on('redirectClient', function(data) {
-                    console.log(data);
-                    window.location = window.location+"client";
-                });
             };
 
             function hostConnect() {
                 var data = null;
                 socket.emit('hostConnect', data);
-                
+                window.location=window.location;
             };
 
             function clientConnect() {
                 var data = {sessionID: document.getElementById('SessionID').value};
                 socket.emit('clientConnect', data);
+                window.location=window.location;
             };
 
         </script>
