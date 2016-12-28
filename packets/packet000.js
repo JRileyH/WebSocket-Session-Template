@@ -1,6 +1,5 @@
 //packet000
-//Connection packet
-var socket = require('socket.io')();
+//Connection packet000
 
 module.exports = function(){
     var _p = {};
@@ -9,9 +8,10 @@ module.exports = function(){
         _me = socket.handshake.address; //gets the currect connecting user's ip address
         console.log(_me + " - "+socket.id+" has landed");
 
-        //set up event listeners for host and client connections
+        //set up event listeners for connections and disconnections
         socket.on('hostConnect', require('./packet001')({ip:_me,id:socket.id}).serve);
         socket.on('clientConnect', require('./packet002')({ip:_me,id:socket.id}).serve);
+        socket.on('disconnect', require('./packet999')(_me).serve);
 
         for(var i in global.sessions) {
             //looking for if connecting user is already a host of an existing session

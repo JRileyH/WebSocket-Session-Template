@@ -68,19 +68,24 @@ global.sessionDistribution = function(sid, includeHost){
         if(sesh.id===sid){
             if(includeHost){
                 var host = sesh.host;
-                distribution.push(io.sockets.sockets[host.id]);
+                if(host.id!=null) {
+                    distribution.push(io.sockets.sockets[host.id]);
+                }
             }
             for(var j in sesh.clients){
                 var client = sesh.clients[j];
-                distribution.push(io.sockets.sockets[client.id]);
+                if(client.id!=null) {
+                    distribution.push(io.sockets.sockets[client.id]);
+                }
             }
             break;
         }
     }
     return distribution;
 }
+
+//sets events for connection and disconnection
 io.sockets.on('connection', require('./packets/packet000')().serve);
-io.sockets.on('disconnect', require('./packets/packet999')().serve);
 
 app.listen(1337);
 console.log('Server Running');
