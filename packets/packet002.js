@@ -4,15 +4,17 @@
 module.exports = function(me) {
     var _p = {};
     _p.serve = function(data) {
-        var sessionIndex = null;
+        var sessionIndex = null; //index of the session client is connecting to
         var joinSession = false;
-        for(var i in sessions){
-            if(sessions[i].id===data.sessionID){
+        for(var i in global.sessions){
+            //looking for session that matches session ID provided by client
+            if(global.sessions[i].id===data.sessionID){
                 sessionIndex = i;
                 var inSession = false;
-                for(var j in sessions[i].clients){
-                    if(sessions[i].clients[j].ip===me.ip){
-                        inSession=true;
+                //looking for if client is already in this session (redundent check for good measure)
+                for(var j in global.sessions[i].clients){
+                    if(global.sessions[i].clients[j].ip===me.ip){
+                        inSession=true; //don't let this client join again
                         break;
                     }
                 }
@@ -21,12 +23,11 @@ module.exports = function(me) {
             }
         }
         if(joinSession){
-            sessions[sessionIndex].clients.push(me);
-            var packet = {index:sessionIndex};
+            global.sessions[sessionIndex].clients.push(me);
         }else{
             console.log("No Session "+data.sessionID+" found or "+me.ip+" already connected as client");
         }
-        console.log(sessions);
+        console.log(global.sessions);
     }
     _p.respond = function(){
 
