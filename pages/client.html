@@ -4,12 +4,23 @@
         <title>Client</title>
         <script>
             var socket;
+            var session = {}
             function init() {
                 socket = io.connect();
+                socket.on('broadcast', function(s){
+                    session = s;
+                    console.log(s);
+                    document.getElementById("SID").innerHTML = s.id;
+                    document.getElementById("HOST").innerHTML = s.host.ip;
+                    document.getElementById("CLIENT").innerHTML = s.lastConnected;
+                });
             };
         </script>
     </head>
     <body onload="init()">
         <h1>Client Page</h1>
+        <h3>Host: <span id="HOST">????</span></h3>
+        <h3>You : <span id="CLIENT">????</span></h3>
+        <h3>Session ID: <span id="SID">????</span></h3>
     </body>
 </html>

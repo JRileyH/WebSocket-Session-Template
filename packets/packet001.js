@@ -8,7 +8,7 @@ module.exports = function(me){
         var sessionID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4);
         var createSession = true;
         for(var i in global.sessions){
-            if(global.sessions[i].host===me){
+            if(global.sessions[i].host.ip===me.ip){
                 sessionIndex = i;
                 createSession = false;
                 break;
@@ -18,7 +18,7 @@ module.exports = function(me){
             }
         }
         if(createSession){
-            console.log(me + " connected as Host for Session "+ sessionID);
+            console.log(me.ip + " connected as Host for Session "+ sessionID);
             global.sessions.push({
                 host:me,
                 id:sessionID,
@@ -26,7 +26,7 @@ module.exports = function(me){
             });
             var packet = {index:sessionIndex};
         }else{
-            console.log("Host "+me+" already connected for Session "+global.session[sessionIndex].id);
+            console.log("Host "+me.ip+" already connected for Session "+global.session[sessionIndex].id);
         }
         console.log(global.sessions);
     }

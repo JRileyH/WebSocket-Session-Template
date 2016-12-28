@@ -4,13 +4,24 @@
         <title>Host</title>
         <script>
             var socket;
+            var session = {};
             function init() {
                 socket = io.connect();
+                socket.on('broadcast', function(s){
+                    session = s;
+                    console.log(s);
+                    document.getElementById("SID").innerHTML = s.id;
+                });
             };
+
+            function test(){
+                console.log(session);
+            }
         </script>
     </head>
     <body onload="init()">
         <h1>Host Page</h1>
-        <h3>Session ID: <span id="sid">????</span></h3>
+        <h3>Session ID: <span id="SID">????</span></h3>
+        <button type="button" onclick="test()">test</button>
     </body>
 </html>

@@ -11,7 +11,7 @@ module.exports = function(me) {
                 sessionIndex = i;
                 var inSession = false;
                 for(var j in sessions[i].clients){
-                    if(sessions[i].clients[j]===me){
+                    if(sessions[i].clients[j].ip===me.ip){
                         inSession=true;
                         break;
                     }
@@ -24,7 +24,7 @@ module.exports = function(me) {
             sessions[sessionIndex].clients.push(me);
             var packet = {index:sessionIndex};
         }else{
-            console.log("No Session "+data.sessionID+" found or "+me+" already connected as client");
+            console.log("No Session "+data.sessionID+" found or "+me.ip+" already connected as client");
         }
         console.log(sessions);
     }
