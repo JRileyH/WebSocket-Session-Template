@@ -1,7 +1,7 @@
 //packet001
 //Host Connection packet
 
-module.exports = function(me){
+module.exports = function(socket, me){
     var _p = {};
     _p.serve = function(data){
         var sessionID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4); //creates a random 4 character session id
@@ -29,6 +29,7 @@ module.exports = function(me){
             console.log("Host "+me.ip+" already connected to another session");
         }
         console.log(global.sessions);
+        socket.emit('refresh');
     }
     _p.respond = function(){
 

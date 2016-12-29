@@ -1,7 +1,7 @@
 //packet999
 //Disconnect packet
 
-module.exports = function(me){
+module.exports = function(socket, me){
     var _p = {};
     _p.serve = function(socket) {
 

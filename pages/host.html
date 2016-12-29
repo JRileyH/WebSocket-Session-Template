@@ -7,6 +7,9 @@
             var session = {};
             function init() {
                 socket = io.connect();
+                socket.on('refresh', function(){
+                    window.location=window.location;
+                });
                 socket.on('broadcast', function(s){
                     session = s;
                     console.log(s);
@@ -14,14 +17,15 @@
                 });
             };
 
-            function test(){
-                console.log(session);
+            function closeSession(){
+                var data = {id: session.id};
+                socket.emit('closeSession', data);
             }
         </script>
     </head>
     <body onload="init()">
         <h1>Host Page</h1>
         <h3>Session ID: <span id="SID">????</span></h3>
-        <button type="button" onclick="test()">test</button>
+        <button type="button" onclick="closeSession()">Close Session</button>
     </body>
 </html>

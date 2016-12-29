@@ -1,7 +1,7 @@
 //packet002
 //Client Connection packet
 
-module.exports = function(me) {
+module.exports = function(socket, me) {
     var _p = {};
     _p.serve = function(data) {
         var sessionIndex = null; //index of the session client is connecting to
@@ -28,6 +28,7 @@ module.exports = function(me) {
             console.log("No Session "+data.sessionID+" found or "+me.ip+" already connected as client");
         }
         console.log(global.sessions);
+        socket.emit('refresh');
     }
     _p.respond = function(){
 

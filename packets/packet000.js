@@ -9,9 +9,10 @@ module.exports = function(){
         console.log(_me + " - "+socket.id+" has landed");
 
         //set up event listeners for connections and disconnections
-        socket.on('hostConnect', require('./packet001')({ip:_me,id:socket.id}).serve);
-        socket.on('clientConnect', require('./packet002')({ip:_me,id:socket.id}).serve);
-        socket.on('disconnect', require('./packet999')(_me).serve);
+        socket.on('hostConnect', require('./packet001')(socket, {ip:_me,id:socket.id}).serve);
+        socket.on('clientConnect', require('./packet002')(socket, {ip:_me,id:socket.id}).serve);
+        socket.on('closeSession', require('./packet003')(socket).serve);
+        socket.on('disconnect', require('./packet999')(socket, _me).serve);
 
         for(var i in global.sessions) {
             //looking for if connecting user is already a host of an existing session
