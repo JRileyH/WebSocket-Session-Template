@@ -4,6 +4,7 @@
 module.exports = function(socket, me){
     var _p = {};
     _p.serve = function(data){
+        me.un = data.userName;
         var sessionID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4); //creates a random 4 character session id
         var createSession = true;
         for(var i in global.sessions){

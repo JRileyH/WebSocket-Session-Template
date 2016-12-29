@@ -4,6 +4,7 @@
 module.exports = function(socket, me) {
     var _p = {};
     _p.serve = function(data) {
+        me.un = data.userName;
         var sessionIndex = null; //index of the session client is connecting to
         var joinSession = false;
         for(var i in global.sessions){

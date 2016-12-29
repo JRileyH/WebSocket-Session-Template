@@ -16,7 +16,11 @@ module.exports = function(socket) {
                         }
                     }
                 }
-            break;
+                var distro = global.sessionDistribution(global.sessions[i].id)
+                for(var j in distro){
+                    distro[j].emit('broadcast', global.sessions[i]);
+                }
+                break;
             }
         }
         socket.emit('refresh');

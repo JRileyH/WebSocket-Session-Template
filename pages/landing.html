@@ -13,12 +13,15 @@
             };
 
             function hostConnect() { //connect as host
-                var data = null;
+                var data = {userName: document.getElementById('UserName').value};
                 socket.emit('hostConnect', data);
             };
 
             function clientConnect() { //connect as client
-                var data = {sessionID: document.getElementById('SessionID').value};
+                var data = {
+                    userName: document.getElementById('UserName').value, 
+                    sessionID: document.getElementById('SessionID').value
+                };
                 socket.emit('clientConnect', data);
             };
 
@@ -28,13 +31,17 @@
     <body onload="init()">
         <h1>Landing Page</h1>
         <p>Server Message: <em id="SrvMsg">Waiting for connection</em></p>
+        <p>Name: <input id="UserName"type="text"/></p>
         <p>Connecting as...</p>
-
         <div>
-            <button type="button" onclick="hostConnect()">Host</button>
+            <div>
+                <button type="button" onclick="hostConnect()">Host</button>
+            </div>
             <br>
-            <input id="SessionID"type="text" maxlength="4"/>
-            <button type="button" onclick="clientConnect()">Client</button>
+            <div>
+                <p>Session ID: <input id="SessionID"type="text" maxlength="4"/></p>
+                <button type="button" onclick="clientConnect()">Client</button>
+            </div>
         </div>
     </body>
 

@@ -12,20 +12,41 @@
                 });
                 socket.on('broadcast', function(s){
                     session = s;
-                    console.log(s);
+                    var tbod = '<tr data-id="'+s.host.id+'"><td>&nbsp;</td><td>'+s.host.un+'</td><td>'+s.host.ip+'</td></tr>';
+                    for(var i in s.clients){
+                        tbod+='<tr data-id="'+s.clients[i].id+'"><td><button type="button" onclick="kickClient(\''+s.clients[i].ip+'\')">kick</button></td><td>'+s.clients[i].un+'</td><td>'+s.clients[i].ip+'</td></tr>'
+                    }
+                    document.getElementById("connList").innerHTML = tbod;
                     document.getElementById("SID").innerHTML = s.id;
                 });
             };
 
-            function closeSession(){
+            function closeSession() {
                 var data = {id: session.id};
                 socket.emit('closeSession', data);
             }
+            function kickClient(ip) {
+                var data = {id: session.id, client: ip};
+                socket.emit('closeSession', data);
+            }
+
         </script>
     </head>
     <body onload="init()">
         <h1>Host Page</h1>
         <h3>Session ID: <span id="SID">????</span></h3>
+        <h3>Connected Clients:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>User Name</th>
+                    <th>IP Address</th>
+                </tr>
+            </thead>
+            <tbody id="connList"></tbody>
+        </table>
+        <br>
         <button type="button" onclick="closeSession()">Close Session</button>
     </body>
 </html>
