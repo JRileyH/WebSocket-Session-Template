@@ -4,8 +4,6 @@
   "author": "J Riley Harrington",
   "description": "Web Socket Session Template",
   "dependencies": {
-    "browserify": "^13.1.1",
-    "domready": "^1.0.8",
     "socket.io": "^1.7.2"
   }
 }
