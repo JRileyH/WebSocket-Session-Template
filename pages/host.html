@@ -1,36 +1,8 @@
 <html>
     <head>
-        <script src="/socket.io/socket.io.js"></script>
         <title>Host</title>
-        <script>
-            var socket;
-            var session = {};
-            function init() {
-                socket = io.connect();
-                socket.on('refresh', function(){
-                    window.location=window.location;
-                });
-                socket.on('broadcast', function(s){
-                    session = s;
-                    var tbod = '<tr data-id="'+s.host.id+'"><td>&nbsp;</td><td>'+s.host.un+'</td><td>'+s.host.ip+'</td></tr>';
-                    for(var i in s.clients){
-                        tbod+='<tr data-id="'+s.clients[i].id+'"><td><button type="button" onclick="kickClient(\''+s.clients[i].ip+'\')">kick</button></td><td>'+s.clients[i].un+'</td><td>'+s.clients[i].ip+'</td></tr>'
-                    }
-                    document.getElementById("connList").innerHTML = tbod;
-                    document.getElementById("SID").innerHTML = s.id;
-                });
-            };
-
-            function closeSession() {
-                var data = {id: session.id};
-                socket.emit('closeSession', data);
-            }
-            function kickClient(ip) {
-                var data = {id: session.id, client: ip};
-                socket.emit('closeSession', data);
-            }
-
-        </script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/pages/js/host.js"></script>
     </head>
     <body onload="init()">
         <h1>Host Page</h1>
@@ -46,6 +18,14 @@
             </thead>
             <tbody id="connList"></tbody>
         </table>
+
+        <div>
+            <ul id="msgList">
+                
+            </ul>
+            <input id="msg" type="text"/><button type="button" onclick="sendMsg()">Send</button>
+        </div>
+
         <br>
         <button type="button" onclick="closeSession()">Close Session</button>
     </body>

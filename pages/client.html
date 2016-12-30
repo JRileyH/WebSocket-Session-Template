@@ -1,39 +1,19 @@
 <html>
     <head>
-        <script src="/socket.io/socket.io.js"></script>
         <title>Client</title>
-        <script>
-            var socket;
-            var session = {}
-            var host;
-            var me;
-
-            function init() {
-                socket = io.connect();
-                socket.on('refresh', function(){
-                    window.location=window.location;
-                });
-                socket.on('broadcast', function(s){
-                    session = s;
-                    host = s.host.ip;
-                    me = s.lastConnected;
-                    document.getElementById("SID").innerHTML = s.id;
-                    document.getElementById("HOST").innerHTML = host;
-                    document.getElementById("CLIENT").innerHTML = me;
-                });
-            };
-
-            function closeSession(){
-                var data = {id: session.id, client: me};
-                socket.emit('closeSession', data);
-            }
-        </script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="/pages/js/client.js"></script>
     </head>
     <body onload="init()">
         <h1>Client Page</h1>
         <h3>Host: <span id="HOST">????</span></h3>
         <h3>You : <span id="CLIENT">????</span></h3>
         <h3>Session ID: <span id="SID">????</span></h3>
+        <div>
+            <ul id="msgList">
+                
+            </ul>
+        </div>
         <button type="button" onclick="closeSession()">Quit Session</button>
     </body>
 </html>

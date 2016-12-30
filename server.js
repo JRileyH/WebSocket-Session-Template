@@ -3,44 +3,51 @@ var fs = require('fs');
 var url = require('url');
 var socket = require('socket.io')();
 
-var landingHandler = function(req, res){
-/* Landing Handler determines whether the connecting user is
- * a new user, a host of an existing session, or a client of 
- * an existing session. It then routes the page accordingly.
- * */
-    var cb = function(err, data){
+var i, j;
+
+var landingHandler = function(req, res) {
+    /* Landing Handler determines whether the connecting user is
+    * a new user, a host of an existing session, or a client of 
+    * an existing session. It then routes the page accordingly.
+    * */
+    var cb = function(err, data) {
         //sends data in response after path to right HTML has been determined
-        if(err){
+        if (err) {
             res.writeHead(500);
             console.error(err);
-            return res.end("ERROR: Failed to load landing page");
-        }else{
+            return res.end('ERROR: Failed to load landing page');
+        } else {
             res.writeHead(200);
             res.end(data);
         }
-    }
+    };
 
-    var newConnection = true;   //if the user is not a host or client of an existing session
-    for(var i in global.sessions) {
+    var path = url.parse(req.url, true).pathname;
+    if (path === '/') {
+        var newConnection = true;   //if the user is not a host or client of an existing session
         //looking for if the connecting user is a host of an existing session
-        if(global.sessions[i].host.ip===req.connection.remoteAddress) {
-            fs.readFile(__dirname + '/pages/host.html', cb);
-            newConnection = false;
-            break;
-        }
-        for(var j in global.sessions[i].clients) {
-            //looking for if the connecting user is a client of an existing session
-            if(global.sessions[i].clients[j].ip===req.connection.remoteAddress) {
-                fs.readFile(__dirname + '/pages/client.html', cb);
+        for (i = 0; i < global.sessions.length; i++) {
+            if (global.sessions[i].host.ip === req.connection.remoteAddress) {
+                fs.readFile(__dirname + '/pages/host.html', cb);
                 newConnection = false;
                 break;
             }
+            //looking for if the connecting user is a client of an existing session
+            for (j = 0; i < global.sessions[i].clients.length; j++) {
+                if (global.sessions[i].clients[j].ip === req.connection.remoteAddress) {
+                    fs.readFile(__dirname + '/pages/client.html', cb);
+                    newConnection = false;
+                    break;
+                }
+            }
         }
-    }
-    if(newConnection){
-        //The connecting user was not determined to be a host or client of an existing session
-        //so bring them to the landing page where they can choose to host or join session
-        fs.readFile(__dirname + '/pages/landing.html', cb);
+        if (newConnection) {
+            //The connecting user was not determined to be a host or client of an existing session
+            //so bring them to the landing page where they can choose to host or join session
+            fs.readFile(__dirname + '/pages/landing.html', cb);
+        }
+    } else { //for any requests that don't involve html pages
+        fs.readFile(__dirname + path, cb);
     }
 };
 
@@ -61,20 +68,20 @@ global.sessionDistribution = function(sid, includeHost){
                     distro[i].emit('broadcast', packet);
                 }
      * */
-    includeHost=includeHost||true;
+    includeHost = includeHost || true;
     var distribution = [];
-    for(var i in global.sessions){
-        var sesh = global.sessions[i];
-        if(sesh.id===sid){
-            if(includeHost){
+    for (var i in global.sessions) {
+        if (global.sessions[i].id === sid) {
+            var sesh = global.sessions[i];
+            if (includeHost) {
                 var host = sesh.host;
-                if(host.id!=null) {
+                if (host.id != null) {
                     distribution.push(io.sockets.sockets[host.id]);
                 }
             }
-            for(var j in sesh.clients){
-                var client = sesh.clients[j];
-                if(client.id!=null) {
+            for (var j in sesh.clients) {
+                if (sesh.clients[j].id != null) {
+                    var client = sesh.clients[j];
                     distribution.push(io.sockets.sockets[client.id]);
                 }
             }
@@ -82,7 +89,7 @@ global.sessionDistribution = function(sid, includeHost){
         }
     }
     return distribution;
-}
+};
 
 //sets events for connection and disconnection
 io.sockets.on('connection', require('./packets/packet000')().serve);
