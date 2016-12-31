@@ -64,7 +64,7 @@ module.exports = function() {
     };
 
     util.returnToSession = function(index, ip, type, id) {
-        sessions[index.ofSession].lastConnected = ip;
+        sessions[index.ofSession].lastConnected = {ip:ip, id:id};
         sessions[index.ofSession].lastConnectionType = type;
         switch (type) {
             case 'host':

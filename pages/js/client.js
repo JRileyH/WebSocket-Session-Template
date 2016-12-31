@@ -23,11 +23,11 @@ function init() {
         me = s.lastConnected;
         document.getElementById('SID').innerHTML = s.id;
         document.getElementById('HOST').innerHTML = host;
-        document.getElementById('CLIENT').innerHTML = me;
+        document.getElementById('CLIENT').innerHTML = me.ip;
     });
 }
 
 function closeSession() {
-    var data = {index: index.ofSession, client: index.ofClient};
+    var data = {index: index.ofSession, client: index.ofClient, id: me.id};
     socket.emit('closeSession', data);
 }
