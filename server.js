@@ -11,32 +11,37 @@ var landingHandler = function(req, res) {
     * */
     var cb = function(err, data) {
         //sends data in response after path to right HTML has been determined
-        if (err) {
+        if (err) { //send server error response
             res.writeHead(500);
             console.error(err);
             return res.end('ERROR: Failed to load landing page');
-        } else {
+        } else { //send OK response
             res.writeHead(200);
             res.end(data);
         }
     };
-
+    //find path of url
     var path = url.parse(req.url, true).pathname;
-    if (path === '/') {
-        if (util.hostIndex(req.connection.remoteAddress)) {
+    if (path === '/') { //if root path (one of the app pages)
+        if (util.hostIndex(req.connection.remoteAddress)) { //detect if host
+            //return host landing page
             fs.readFile(__dirname + '/pages/host.html', cb);
-        } else if (util.clientIndex(req.connection.remoteAddress)) {
+        } else if (util.clientIndex(req.connection.remoteAddress)) { //detect if client
+            //return client landing page
             fs.readFile(__dirname + '/pages/client.html', cb);
-        } else {
+        } else { //neither host nor client
+            //return landing page where they can choose to be host or client
             fs.readFile(__dirname + '/pages/landing.html', cb);
         }
-    } else { //for any requests that don't involve html pages
+    } else { //not an app page (some other extranious resource)
         fs.readFile(__dirname + path, cb);
     }
 };
 
 var app = http.createServer(landingHandler);
 var io = socket.listen(app);
+
+//initialized socket.io object for the utility module
 util.initSocket(io);
 
 //sets events for connection and disconnection

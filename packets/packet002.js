@@ -4,10 +4,13 @@
 module.exports = function(util, socket, me) {
     var _p = {};
     _p.serve = function(data) {
+        //set username from data package
         me.un = data.userName;
+        //find index of session from the session ID user input
         var index = util.sessionIndex(data.sessionID);
-        if (index > -1) {
-            if (!util.clientIndex(me.ip, index)) {
+        if (index > -1) { //if session is found
+            if (!util.clientIndex(me.ip, index)) { //if is not already a client
+                //join session
                 util.joinSession(me, index, function() {
                     socket.emit('refresh');
                 });

@@ -6,6 +6,7 @@ function init() {
     var i;
     socket = io.connect();
     socket.on('index', function(_index) {
+        console.log(_index);
         index = _index;
     });
     socket.on('refresh', function() {
