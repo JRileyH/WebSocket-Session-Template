@@ -1,9 +1,7 @@
 var socket;
 function init() { //on page load
     socket = io.connect(); //create socket connection
-    socket.on('refresh', function() {
-        window.location = window.location;
-    });
+    socket.on('refresh', util.refresh);
 }
 
 function hostConnect() { //connect as host

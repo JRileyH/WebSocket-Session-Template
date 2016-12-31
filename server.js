@@ -2,7 +2,7 @@ var http = require('http');
 var fs = require('fs');
 var url = require('url');
 var socket = require('socket.io')();
-var util = require('./util')();
+var util = require('./server-util')();
 
 var landingHandler = function(req, res) {
     /* Landing Handler determines whether the connecting user is
