@@ -7,7 +7,9 @@ function init() { //on page load
 }
 
 function hostConnect() { //connect as host
-    var data = {userName: document.getElementById('UserName').value};
+    var data = {
+        userName: document.getElementById('UserName').value
+    };
     socket.emit('hostConnect', data);
 }
 

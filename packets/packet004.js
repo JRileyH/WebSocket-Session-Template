@@ -1,13 +1,10 @@
 //packet004
 //Chat Message packet
 
-module.exports = function(socket) {
+module.exports = function(util, socket) {
     var _p = {};
     _p.serve = function(data) {
-        console.log(data.msg);
-    };
-    _p.respond = function() {
-
+        console.log(data);
     };
     return _p;
 };
