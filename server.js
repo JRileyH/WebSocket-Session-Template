@@ -12,14 +12,16 @@ var landingHandler = function(req, res) {
 
     var getCookie = function(cname) {
         var name = cname + '=';
-        var ca = req.headers.cookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) === ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) === 0) {
-                return c.substring(name.length, c.length);
+        if(req.headers !== undefined) {
+            var ca = req.headers.cookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) === 0) {
+                    return c.substring(name.length, c.length);
+                }
             }
         }
         return '';
