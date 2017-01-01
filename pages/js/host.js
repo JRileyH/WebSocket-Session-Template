@@ -9,6 +9,7 @@ function init() {
             '<tr data-id="' + s.host.id + '">' +
                 '<td>&nbsp;</td>' +
                 '<td>' + s.host.un + '</td>' +
+                '<td>' + s.host.guid + '</td>' +
                 '<td>' + s.host.ip + '</td>' +
             '</tr>';
             for (var i = 0; i < s.clients.length; i++) {
@@ -20,6 +21,9 @@ function init() {
                         '</td>' +
                         '<td>' +
                             s.clients[i].un +
+                        '</td>' +
+                        '<td>' +
+                            s.clients[i].guid +
                         '</td>' +
                         '<td>' +
                             s.clients[i].ip +

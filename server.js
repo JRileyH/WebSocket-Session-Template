@@ -12,7 +12,7 @@ var landingHandler = function(req, res) {
 
     var getCookie = function(cname) {
         var name = cname + '=';
-        if(req.headers !== undefined) {
+        if(req.headers.cookie !== undefined) {
             var ca = req.headers.cookie.split(';');
             for (var i = 0; i < ca.length; i++) {
                 var c = ca[i];
