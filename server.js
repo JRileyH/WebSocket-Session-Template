@@ -23,6 +23,7 @@ var landingHandler = function(req, res) {
     //find path of url
     var path = url.parse(req.url, true).pathname;
     if (path === '/') { //if root path (one of the app pages)
+        console.log(req.connection.remoteAddress + '-' + req.connection.localAddress);
         if (util.hostIndex(req.connection.remoteAddress)) { //detect if host
             //return host landing page
             fs.readFile(__dirname + '/pages/host.html', cb);

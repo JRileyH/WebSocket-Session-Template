@@ -6,6 +6,9 @@ module.exports = function(util) {
     var connectorsIP;
     _p.serve = function(socket) {
         //gets the currect connecting user's ip address
+
+        //console.log(socket.handshake);
+
         connectorsIP = socket.handshake.address;
         //set up event listeners for connections and disconnections
         socket.on('hostConnect', require('./packet001')(util, socket, {ip:connectorsIP,id:socket.id}).serve);   //when party connects as host
