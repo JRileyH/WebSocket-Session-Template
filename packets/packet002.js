@@ -4,12 +4,22 @@
 module.exports = function(util, socket, me) {
     var _p = {};
     _p.serve = function(data) {
-        //set username from data package
+        //set client information passed form client
         me.un = data.userName;
+        me.guid = data.guid;
+
+        if (me.guid.length !== 8) {
+            me.guid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+            while (util.hostIndex(me.guid) || util.clientIndex(me.guid)) {
+                me.guid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+            }
+            socket.emit('guid', me.guid);
+        }
+
         //find index of session from the session ID user input
         var index = util.sessionIndex(data.sessionID);
         if (index > -1) { //if session is found
-            if (!util.clientIndex(me.ip, index)) { //if is not already a client
+            if (!util.clientIndex(me.guid, index)) { //if is not already a client
                 //join session
                 util.joinSession(me, index, function() {
                     socket.emit('refresh');

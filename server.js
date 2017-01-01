@@ -9,6 +9,22 @@ var landingHandler = function(req, res) {
     * a new user, a host of an existing session, or a client of 
     * an existing session. It then routes the page accordingly.
     * */
+
+    var getCookie = function(cname) {
+        var name = cname + '=';
+        var ca = req.headers.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return '';
+    };
+
     var cb = function(err, data) {
         //sends data in response after path to right HTML has been determined
         if (err) { //send server error response
@@ -20,14 +36,17 @@ var landingHandler = function(req, res) {
             res.end(data);
         }
     };
+
+    var connectorGUID = getCookie('websocketguid');
+
     //find path of url
     var path = url.parse(req.url, true).pathname;
     if (path === '/') { //if root path (one of the app pages)
-        console.log(req.connection.remoteAddress + '-' + req.connection.localAddress);
-        if (util.hostIndex(req.connection.remoteAddress)) { //detect if host
+
+        if (util.hostIndex(connectorGUID)) { //detect if host
             //return host landing page
             fs.readFile(__dirname + '/pages/host.html', cb);
-        } else if (util.clientIndex(req.connection.remoteAddress)) { //detect if client
+        } else if (util.clientIndex(connectorGUID)) { //detect if client
             //return client landing page
             fs.readFile(__dirname + '/pages/client.html', cb);
         } else { //neither host nor client

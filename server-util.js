@@ -15,10 +15,10 @@ module.exports = function() {
         io = socket;
     };
 
-    util.hostIndex = function(ip) {
+    util.hostIndex = function(guid) {
         for (var i = 0; i < sessions.length; i++) {
             if (sessions[i] !== 'OPEN_SESSION') {
-                if (sessions[i].host.ip === ip) {
+                if (sessions[i].host.guid === guid) {
                     return {ofSession: i, ofClient: 'host'};
                 }
             }
@@ -26,13 +26,13 @@ module.exports = function() {
         return false;
     };
 
-    util.clientIndex = function(ip, sindex) {
+    util.clientIndex = function(guid, sindex) {
         var i;
         if (sindex) {
             if (sessions[sindex] !== 'OPEN_SESSION') {
                 for (i = 0; i < sessions[sindex].clients.length; i++) {
                     if (sessions[sindex].clients[i] !== 'OPEN_CLIENT') {
-                        if (sessions[sindex].clients[i].ip === ip) {
+                        if (sessions[sindex].clients[i].guid === guid) {
                             return {ofSession: sindex, ofClient: i};
                         }
                     }
@@ -43,7 +43,7 @@ module.exports = function() {
                 if (sessions[i] !== 'OPEN_SESSION') {
                     for (var j = 0; j < sessions[i].clients.length; j++) {
                         if (sessions[i].clients[j] !== 'OPEN_CLIENT') {
-                            if (sessions[i].clients[j].ip === ip) {
+                            if (sessions[i].clients[j].guid === guid) {
                                 return {ofSession: i, ofClient: j};
                             }
                         }
@@ -63,20 +63,19 @@ module.exports = function() {
         return -1;
     };
 
-    util.returnToSession = function(index, ip, type, id) {
-        sessions[index.ofSession].lastConnected = {ip:ip, id:id};
-        sessions[index.ofSession].lastConnectionType = type;
-        switch (type) {
+    util.returnToSession = function(index, connector) {
+        sessions[index.ofSession].lastConnected = connector;
+        switch (connector.type) {
             case 'host':
-                sessions[index.ofSession].host.id = id;
+                sessions[index.ofSession].host.id = connector.id;
             break;
 
             case 'client':
-                sessions[index.ofSession].clients[index.ofClient].id = id;
+                sessions[index.ofSession].clients[index.ofClient].id = connector.id;
             break;
 
             default:
-                console.log('Unknown connection type ' + type);
+                console.log('Unknown connection type ' + connector.type);
         }
     };
 

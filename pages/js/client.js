@@ -3,8 +3,9 @@ var host;
 var me;
 
 function init() {
-    socket = io.connect();
+    socket = io.connect('', {query: 'guid=' + util.getGuid()}); //create socket connection
     socket.on('index', util.setIndex);
+    socket.on('guid', util.setGuid);
     socket.on('refresh', util.refresh);
     socket.on('broadcast', function(s) { util.updateSession(s, function() {
             host = s.host.ip;
