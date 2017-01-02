@@ -7,12 +7,11 @@ module.exports = function(util, socket, me) {
         //set client information passed form client
         me.un = data.userName;
         me.guid = data.guid;
-
+        
         if (me.guid.length !== 8) {
-            me.guid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-            while (util.hostIndex(me.guid) || util.clientIndex(me.guid)) {
-                me.guid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-            }
+            me.guid = util.generateGuid(8, function(guid) {
+                return (util.hostIndex(guid) || util.clientIndex(guid));
+            });
             socket.emit('guid', me.guid);
         }
 

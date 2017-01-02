@@ -9,22 +9,15 @@ module.exports = function(util, socket, me) {
         me.guid = data.guid;
 
         if (me.guid.length !== 8) {
-            me.guid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-            while (util.hostIndex(me.guid) || util.clientIndex(me.guid)) {
-                me.guid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
-            }
+            me.guid = util.generateGuid(8, function(guid) {
+                return (util.hostIndex(guid) || util.clientIndex(guid));
+            });
             socket.emit('guid', me.guid);
         }
 
         if (!util.hostIndex(me.guid)) {//if the user is a not already a host
-            //generate a random 4 character session ID
-            var sessionID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4);
-            while (util.sessionIndex(sessionID) > -1) { //if the session ID is not already used
-                //continue to generate a new session ID until one is found that is not duplicated
-                sessionID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 4);
-            }
             //create session
-            util.createSession(me, sessionID, function() {
+            util.createSession(me, function() {
                 socket.emit('refresh');
             });
         } else {

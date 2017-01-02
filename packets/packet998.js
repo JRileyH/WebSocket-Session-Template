@@ -10,7 +10,7 @@ module.exports = function(util, socket) {
             util.removeSession(data.index);
         } else { //if a specific client was included in data, only close session for that client
             //close session for specified client
-            util.removeClient(data.index, data.client, data.id);
+            util.removeClient(data.index, data.client);
         }
     };
     return _p;
