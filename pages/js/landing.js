@@ -22,6 +22,11 @@ function clientConnect() { //connect as client
     socket.emit('clientConnect', data);
 }
 
-function genCookie() {
-    util.setGuid('testing');
+//DEBUGGING TOOLS
+function resetCookie() {
+    util.setGuid('');
+}
+function printSession() {
+    util.printSession();
+    socket.emit('print');
 }

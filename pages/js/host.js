@@ -49,3 +49,12 @@ function sendMsg() {
     var data = {id: util.getSession().id, sender: 'host', msg: document.getElementById('msg').value};
     socket.emit('message', data);
 }
+
+//DEBUGGING TOOLS
+function resetCookie() {
+    util.setGuid('');
+}
+function printSession() {
+    util.printSession();
+    socket.emit('print');
+}

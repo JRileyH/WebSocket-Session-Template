@@ -1,17 +1,25 @@
 module.exports = function() {
-    var util = {};
+    var _util = {};
     var sessions = [];
     var io = null;
 
-    util.initSocket = function(socket) {
+    _util.printSession = function() {
+        console.log(sessions);
+    };
+
+    _util.initSocket = function(socket) {
         io = socket;
+        //for debugging
+        socket.on('print', function(){
+            console.log(sessions);
+        });
     };
 
     /* Session Index: Returns Integer of sessions index in array OR -1 if the session cannot be found
      * Params:
      *      id: String - Session ID of session in question
      * */
-    util.sessionIndex = function(id) {
+    _util.sessionIndex = function(id) {
         for (var i = 0; i < sessions.length; i++) {
             if (sessions[i].id === id) {
                 return i;
@@ -24,7 +32,7 @@ module.exports = function() {
      * Params:
      *      guid: String - Cookie GUID of the host in question
      * */
-    util.hostIndex = function(guid) {
+    _util.hostIndex = function(guid) {
         for (var i = 0; i < sessions.length; i++) {
             if (sessions[i] !== 'OPEN_SESSION') {
                 if (sessions[i].host.guid === guid) {
@@ -40,7 +48,7 @@ module.exports = function() {
      *      guid: String - Cookie GUID of the client in question
      *      sindex: Integer(Optional) - pass this in if you already have the session you want to look in and want to save processing time
      * */
-    util.clientIndex = function(guid, sindex) {
+    _util.clientIndex = function(guid, sindex) {
         var i;
         if (sindex) {
             if (sessions[sindex] !== 'OPEN_SESSION') {
@@ -73,7 +81,7 @@ module.exports = function() {
      *      index: Object - {ofSession: <index of session>, ofClient: <index of client or 'host' if host>}
      *      connector Object - {ip: <connectors ip address>, guid: < connectors cookie guid>, id: <connectors new socket ID>, type: <'host' or 'client'>}
      * */
-    util.returnToSession = function(index, connector) {
+    _util.returnToSession = function(index, connector) {
         sessions[index.ofSession].lastConnected = connector;
         switch (connector.type) {
             case 'host':
@@ -95,7 +103,7 @@ module.exports = function() {
      *      sindex: Integer - index of session from session array
      *      exSocket: Socket(Optional) - if a client is going to be removed from session or for any reason is not in the session at the time of the update but still wants to recieve the update broadcast, pass their socket in.
      * */
-    util.updateSession = function(sindex, exSocket) {
+    _util.updateSession = function(sindex, exSocket) {
         var distro = this.sessionDistribution(sindex);
         if (exSocket) {
             distro.push(exSocket);
@@ -111,7 +119,7 @@ module.exports = function() {
      *      sindex: Integer - index of session from session array
      *      includeHost: Boolean (Optional) - true(default): host socket will be in the array, false: only clients are in array
      * */
-    util.sessionDistribution = function(sindex, includeHost) {
+    _util.sessionDistribution = function(sindex, includeHost) {
         includeHost = includeHost || true;
         if (sessions[sindex] === 'OPEN_SESSION') {
             return [];
@@ -139,7 +147,7 @@ module.exports = function() {
      *      length: Integer - number of characters of the guid.
      *      condition: Function - pass it a parameter and return a boolean of if that parameter is unique inside whatever array it's going to be saved to (true is it is not unique)
      * */
-    util.generateGuid = function(length, condition) {
+    _util.generateGuid = function(length, condition) {
             var guid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, length);
             while (condition(guid)) {
                 guid = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, length);
@@ -156,10 +164,10 @@ module.exports = function() {
      *      host: Object - {id: <socket.io ID of host>, ip: <Ip addess of host>, guid: <cookie value saved in hosts browser>, un: <username of host>}
      *      cb: Function - The callback function (Currently set to a refresh event, subject to change...)
      * */
-    util.createSession = function(host, cb) {
+    _util.createSession = function(host, cb) {
         //generate a random 4 character session ID
         var sessionID = this.generateGuid(4, function(){
-            return util.sessionIndex(sessionID) > -1;
+            return _util.sessionIndex(sessionID) > -1;
         });
         var i, index = -1;
         for (i = 0; i < sessions.length; i++) {
@@ -193,7 +201,7 @@ module.exports = function() {
      *      sindex: Integer - index of session from session array
      *      cb: Function - The callback function (Currently set to a refresh event, subject to change...)
      * */
-    util.joinSession = function(client, sindex, cb) {
+    _util.joinSession = function(client, sindex, cb) {
         var i, cindex = -1;
         for (i = 0; i < sessions[sindex].clients.length; i++) {
             if (sessions[sindex].clients[i] === 'OPEN_CLIENT') {
@@ -216,7 +224,7 @@ module.exports = function() {
      * Params:
      *      sindex: Integer - index of session from session array
      * */
-    util.removeSession = function(sindex) {
+    _util.removeSession = function(sindex) {
         var distro = this.sessionDistribution(sindex);
         sessions[sindex] = 'OPEN_SESSION';
         for (var i = 0; i < distro.length; i++) {
@@ -232,7 +240,7 @@ module.exports = function() {
      *      sindex: Integer - index of session from session array
      *      cindex: Integer - index of client from sessions client array
      * */
-    util.removeClient = function(sindex, cindex) {
+    _util.removeClient = function(sindex, cindex) {
         var clientID = sessions[sindex].clients[cindex].id;
         sessions[sindex].clients[cindex] = 'OPEN_CLIENT';
         this.updateSession(sindex, io.sockets.sockets[clientID]);
@@ -244,7 +252,7 @@ module.exports = function() {
      * Params:
      *      index: Object - {ofSession: <index of session>, ofClient: <index of client or 'host' if host>}
      * */
-    util.disconnect = function(index) {
+    _util.disconnect = function(index) {
         if (index.ofClient === 'host') {
             sessions[index.ofSession].host.id = 'DISCONNECTED';
         } else {
@@ -252,5 +260,5 @@ module.exports = function() {
         }
     };
 
-    return util;
+    return _util;
 };

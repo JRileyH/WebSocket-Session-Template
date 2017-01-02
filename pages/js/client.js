@@ -22,4 +22,13 @@ function closeSession() {
     socket.emit('closeSession', data);
 }
 
+//DEBUGGING TOOLS
+function resetCookie() {
+    util.setGuid('');
+}
+function printSession() {
+    util.printSession();
+    socket.emit('print');
+}
+
 

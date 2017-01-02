@@ -25,6 +25,10 @@ var util = (function () {
         }
         return '';
     }
+    
+    _util.printSession = function(){
+        console.log(_session);
+    };
 
     _util.setGuid = function(guid) {
         setCookie('websocketguid', guid, 365);
