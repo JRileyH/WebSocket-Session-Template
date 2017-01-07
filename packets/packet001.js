@@ -9,8 +9,8 @@ module.exports = function(util, socket, me) {
         me.guid = data.guid;
 
         if (me.guid.length !== 8) {
-            me.guid = util.generateGuid(8, function(guid) {
-                return (util.hostIndex(guid) || util.clientIndex(guid));
+            me.guid = util.generateGuid(8, function(x) {
+                return (util.hostIndex(x) || util.clientIndex(x));
             });
             socket.emit('guid', me.guid);
         }
@@ -21,7 +21,7 @@ module.exports = function(util, socket, me) {
                 socket.emit('refresh');
             });
         } else {
-            console.log('Host ' + me.ip + ' already connected to another session');
+            console.error('Host ' + me.ip + ' already connected to another session');
         }
     };
     return _p;

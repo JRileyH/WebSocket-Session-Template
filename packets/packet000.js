@@ -11,8 +11,6 @@ module.exports = function(util) {
         connectorsIP = socket.handshake.address;
         connectorsGUID = socket.handshake.query.guid;
 
-        console.log(connectorsGUID);
-
         //set up event listeners for connections and disconnections
         socket.on('hostConnect', require('./packet001')(util, socket, {ip:connectorsIP,id:socket.id,guid:connectorsGUID}).serve);   //when party connects as host
         socket.on('clientConnect', require('./packet002')(util, socket, {ip:connectorsIP,id:socket.id,guid:connectorsGUID}).serve); //when party connects as client

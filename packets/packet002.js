@@ -9,8 +9,8 @@ module.exports = function(util, socket, me) {
         me.guid = data.guid;
         
         if (me.guid.length !== 8) {
-            me.guid = util.generateGuid(8, function(guid) {
-                return (util.hostIndex(guid) || util.clientIndex(guid));
+            me.guid = util.generateGuid(8, function(x) {
+                return (util.hostIndex(x) || util.clientIndex(x));
             });
             socket.emit('guid', me.guid);
         }
@@ -24,10 +24,10 @@ module.exports = function(util, socket, me) {
                     socket.emit('refresh');
                 });
             } else {
-                console.log('Client ' + me.ip + ' is already in this session.');
+                console.error('Client ' + me.ip + ' is already in this session.');
             }
         } else {
-            console.log('No Session ' + data.sessionID + ' found.');
+            console.error('No Session ' + data.sessionID + ' found.');
         }
     };
     return _p;

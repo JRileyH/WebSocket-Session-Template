@@ -4,6 +4,13 @@ var url = require('url');
 var socket = require('socket.io')();
 var util = require('./server-util')();
 
+global.logging = true;
+global.clog = function(msg){
+    if(logging){
+        console.log(msg);
+    }
+};
+
 var landingHandler = function(req, res) {
     /* Landing Handler determines whether the connecting user is
     * a new user, a host of an existing session, or a client of 
@@ -44,7 +51,6 @@ var landingHandler = function(req, res) {
     //find path of url
     var path = url.parse(req.url, true).pathname;
     if (path === '/') { //if root path (one of the app pages)
-
         if (util.hostIndex(connectorGUID)) { //detect if host
             //return host landing page
             fs.readFile(__dirname + '/pages/host.html', cb);
@@ -70,4 +76,4 @@ util.initSocket(io);
 io.sockets.on('connection', require('./packets/packet000')(util).serve);
 
 app.listen(1337);
-console.log('Server Running');
+clog('Server Running');

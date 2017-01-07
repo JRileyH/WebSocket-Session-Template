@@ -4,6 +4,7 @@ var util = (function () {
     var _index = {};
     var _guid = getCookie('websocketguid');
 
+//Private
     function setCookie(cname, cvalue, exdays) {
         var d = new Date();
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -25,11 +26,8 @@ var util = (function () {
         }
         return '';
     }
-    
-    _util.printSession = function(){
-        console.log(_session);
-    };
 
+//Public
     _util.setGuid = function(guid) {
         setCookie('websocketguid', guid, 365);
         _guid = guid;
@@ -40,7 +38,6 @@ var util = (function () {
     };
 
     _util.setIndex = function(i) {
-        console.log(i);
         _index = i;
     };
 
@@ -57,7 +54,6 @@ var util = (function () {
             window.location = window.location;
             return;
         }
-        console.log(s);
         _session = s;
         cb();
     };
