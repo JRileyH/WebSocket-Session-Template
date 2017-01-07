@@ -17,23 +17,6 @@ var landingHandler = function(req, res) {
     * an existing session. It then routes the page accordingly.
     * */
 
-    var getCookie = function(cname) {
-        var name = cname + '=';
-        if(req.headers.cookie !== undefined) {
-            var ca = req.headers.cookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) === ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) === 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-        }
-        return '';
-    };
-
     var cb = function(err, data) {
         //sends data in response after path to right HTML has been determined
         if (err) { //send server error response
@@ -46,7 +29,8 @@ var landingHandler = function(req, res) {
         }
     };
 
-    var connectorGUID = getCookie('websocketguid');
+    //parses out the web socket cookie from clients cookie string
+    var connectorGUID = util.parseCookie('websocketguid', req.headers.cookie);
 
     //find path of url
     var path = url.parse(req.url, true).pathname;
