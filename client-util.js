@@ -1,8 +1,13 @@
 var util = (function () {
     var _util = {};
     var _session = {};
-    var _index = {};
-    var _guid = getCookie('websocketguid');
+    var _my = {
+        index: {},
+        id: '',
+        guid: getCookie('websocketguid'),
+        name:'',
+        ip:''
+    };
 
 //Private
     function setCookie(cname, cvalue, exdays) {
@@ -28,39 +33,68 @@ var util = (function () {
     }
 
 //Public
-    _util.setGuid = function(guid) {
-        setCookie('websocketguid', guid, 365);
-        _guid = guid;
+    _util.Guid = function(guid) {
+        if (guid === undefined) {//get
+            return _my.guid;
+        } else {//set
+            setCookie('websocketguid', guid, 365);
+            _my.guid = guid;
+        }
     };
 
-    _util.getGuid = function() {
-        return _guid;
+    _util.Index = function(i) {
+        if (i === undefined) {//get
+            return _my.index;
+        } else {//set
+            _my.index = i;
+        }
     };
 
-    _util.setIndex = function(i) {
-        _index = i;
+    _util.Name = function(name) {
+        if (name === undefined) { //get
+            return _my.name;
+        } else { //set
+            _my.name = name;
+        }
     };
 
-    _util.getIndex = function() {
-        return _index;
+    _util.Ip = function(ip) {
+        if( ip === undefined) {
+            return _my.ip; //get
+        } else { //set
+            _my.ip = ip;
+        }
+    };
+
+     _util.Id = function(id) {
+        if( id === undefined) {
+            return _my.id; //get
+        } else { //set
+            _my.id = id;
+        }
+    };
+
+    _util.Session = function(s, cb) {
+        if (s === undefined) { //get
+            return _session;
+        } else { //set
+            if (s === 'OPEN_SESSION'  || s.clients[_my.index.ofClient] === 'OPEN_CLIENT') {
+                window.location = window.location;
+                return;
+            }
+            _session = s;
+            var info = _my.index.ofClient === 'host' ? s.host : s.clients[_my.index.ofClient];
+            _my.guid = info.guid;
+            _my.name = info.un;
+            _my.id = info.id;
+            _my.ip = info.ip;
+        }
+        cb();
     };
 
     _util.refresh = function() {
         window.location = window.location;
     };
-
-    _util.updateSession = function(s, cb) {
-        if (s === 'OPEN_SESSION'  || s.clients[_index.ofClient] === 'OPEN_CLIENT') {
-            window.location = window.location;
-            return;
-        }
-        _session = s;
-        cb();
-    };
-
-    _util.getSession = function() {
-        return _session;
-    };
-
+    
     return _util;
 })();

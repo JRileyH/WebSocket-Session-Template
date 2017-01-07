@@ -1,10 +1,14 @@
 var socket;
 function init() {
-    socket = io.connect('', {query: 'guid=' + util.getGuid()}); //create socket connection
-    socket.on('index', util.setIndex);
-    socket.on('guid', util.setGuid);
-    socket.on('refresh', util.refresh);
-    socket.on('broadcast', function(s) { util.updateSession(s, function() {
+    socket = io.connect('', {query: 'guid=' + util.Guid()}); //create socket connection
+    
+    socket.on('index', function(index) {
+        util.Index(index);
+        document.getElementById('MY_SINDEX').innerHTML = index.ofSession;
+        document.getElementById('MY_CINDEX').innerHTML = index.ofClient;
+        
+    });
+    socket.on('session', function(s) { util.Session(s, function() {
             var tbod =
             '<tr data-id="' + s.host.id + '">' +
                 '<td>&nbsp;</td>' +
@@ -33,16 +37,23 @@ function init() {
             }
             document.getElementById('connList').innerHTML = tbod;
             document.getElementById('SID').innerHTML = s.id;
+
+            var info = s.host;
+            document.getElementById('MY_GUID').innerHTML = info.guid;
+            document.getElementById('MY_NAME').innerHTML = info.un;
+            document.getElementById('MY_ID').innerHTML = info.id;
+            document.getElementById('MY_IP').innerHTML = info.ip;
         });
+        socket.on('refresh', util.refresh);
     });
 }
 
 function closeSession() {
-    var data = {index: util.getIndex().ofSession};
+    var data = {index: util.Index().ofSession};
     socket.emit('closeSession', data);
 }
 function kickClient(clientIndex, clientID) {
-    var data = {index: util.getIndex().ofSession, client: clientIndex, id: clientID};
+    var data = {index: util.Index().ofSession, client: clientIndex, id: clientID};
     socket.emit('closeSession', data);
 }
 function sendMsg() {

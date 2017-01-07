@@ -101,7 +101,7 @@ module.exports = function() {
             distro.push(exSocket);
         }
         for (var j = 0; j < distro.length; j++) {
-            distro[j].emit('broadcast', _sessions[sindex]);
+            distro[j].emit('session', _sessions[sindex]);
         }
     };
 
@@ -220,7 +220,7 @@ module.exports = function() {
         var distro = this.sessionDistribution(sindex);
         _sessions[sindex] = 'OPEN_SESSION';
         for (var i = 0; i < distro.length; i++) {
-            distro[i].emit('broadcast', 'OPEN_SESSION');
+            distro[i].emit('session', 'OPEN_SESSION');
         }
     };
 

@@ -11,8 +11,7 @@ module.exports = function(util, socket, me) {
         if (me.guid.length !== 8) {
             me.guid = util.generateGuid(8, function(x) {
                 return (util.hostIndex(x) || util.clientIndex(x));
-            });
-            socket.emit('guid', me.guid);
+            });  
         }
 
         if (!util.hostIndex(me.guid)) {//if the user is a not already a host

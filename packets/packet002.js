@@ -12,7 +12,6 @@ module.exports = function(util, socket, me) {
             me.guid = util.generateGuid(8, function(x) {
                 return (util.hostIndex(x) || util.clientIndex(x));
             });
-            socket.emit('guid', me.guid);
         }
 
         //find index of session from the session ID user input
