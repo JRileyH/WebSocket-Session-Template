@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "author": "J Riley Harrington",
   "description": "Web Socket Session Template",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
     "socket.io": "^1.7.2"
   }
